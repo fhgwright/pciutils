@@ -22,6 +22,10 @@ ifdef PCI_HAVE_PM_DUMP
 OBJS += dump
 endif
 
+ifdef PCI_OS_DARWIN
+OBJS += DirectHW
+endif
+
 ifdef PCI_HAVE_PM_FBSD_DEVICE
 OBJS += fbsd-device
 CFLAGS += -I/usr/src/sys
@@ -64,11 +68,7 @@ $(PCILIB): $(addsuffix .o,$(OBJS))
 else
 CFLAGS += -fPIC -fvisibility=hidden
 $(PCILIB): $(addsuffix .o,$(OBJS))
- ifdef PCI_HAVE_PM_DARWIN_DEVICE
-	$(CC) -shared $(LDFLAGS) $(SONAME) -Wl,-install_name,$(LIBDIR)/$(PCILIB) -o $@ $^ $(LIB_LDLIBS)
- else
-	$(CC) -shared $(LDFLAGS) $(SONAME) -Wl,--version-script=libpci.ver -o $@ $^ $(LIB_LDLIBS)
- endif
+    $(CC) -shared $(LDFLAGS) $(SONAME) -Wl,--version-script=libpci.ver -o $@ $^ $(LIB_LDLIBS)
 endif
 
 $(PCILIBPC): libpci.pc.in
@@ -92,6 +92,7 @@ obsd-device.o: obsd-device.c $(INCL)
 fbsd-device.o: fbsd-device.c $(INCL)
 aix-device.o: aix-device.c $(INCL)
 dump.o: dump.c $(INCL)
+DirectHW.o: DirectHW.c $(INCL) /System/Library/Frameworks/IOKit.framework /System/Library/Frameworks/ApplicationServices.framework/Headers/ApplicationServices.h /System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h
 names.o: names.c $(INCL) names.h
 names-cache.o: names-cache.c $(INCL) names.h
 names-hash.o: names-hash.c $(INCL) names.h

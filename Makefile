@@ -7,6 +7,10 @@ CFLAGS=$(OPT) -Wall -W -Wno-parentheses -Wstrict-prototypes -Wmissing-prototypes
 VERSION=3.7.0
 DATE=2020-05-31
 
+
+# Needed for macOS High Sierra
+LDFLAGS=-framework IOKit
+
 # Host OS and release (override if you are cross-compiling)
 HOST=
 RELEASE=
@@ -36,7 +40,7 @@ PREFIX=/usr/local
 SBINDIR=$(PREFIX)/sbin
 SHAREDIR=$(PREFIX)/share
 IDSDIR=$(SHAREDIR)
-MANDIR:=$(shell if [ -d $(PREFIX)/share/man ] ; then echo $(PREFIX)/share/man ; else echo $(PREFIX)/man ; fi)
+MANDIR:=$(PREFIX)/share/man
 INCDIR=$(PREFIX)/include
 LIBDIR=$(PREFIX)/lib
 PKGCFDIR=$(LIBDIR)/pkgconfig
